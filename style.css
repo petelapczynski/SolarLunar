@@ -1,0 +1,19 @@
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+	table-layout: auto; 
+}
+td {
+	text-align: center;
+	align-items: center;
+	padding: 2px;
+}
+th {
+    padding: 2px;
+}
+
+.fade-in-on-load {animation-duration: 2.3s; animation-name: fadeInOnLoad;}
+@keyframes fadeInOnLoad {
+0%,50% {opacity: 0;}
+100% {opacity: 1;}
+}
