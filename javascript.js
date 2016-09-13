@@ -17,13 +17,18 @@ jQuery(document).ready(function($) {
   //Load Header Image
  // loadImage("", "100", "25", "#headerdiv");
   
+  //Load SunMoonMap
+  //20160913T0313
+  console.log("http://www.timeanddate.com/scripts/sunmap.php?iso="+yyyymmdd());
+  $("#headimg").attr("src","http://www.timeanddate.com/scripts/sunmap.php?iso="+ yyyymmdd());
+  
   //api call parse json
-   $.getJSON("http://api.wunderground.com/api/73fc3d1621dbe642/alerts/astronomy/conditions/forecast10day/q/MI/48353.json", function(json) {
+/*   $.getJSON("http://api.wunderground.com/api/73fc3d1621dbe642/alerts/astronomy/conditions/forecast10day/q/MI/48353.json", function(json) {
     console.log(json.current_observation.temp_f + " API Call"); // log to console
 	console.log(json);
 	console.log(json.sun_phase.sunrise.hour + ":");
   }); 
-   
+*/   
   
   //local file
   $.getJSON("weather.json", function(json) {
@@ -35,61 +40,35 @@ jQuery(document).ready(function($) {
     $('<img src="'+ path +'">').load(function() {
       $(this).width(width).height(height).appendTo(target);
     });
-  }
+  };
+
+  function yyyymmdd() { 
+	  var d = new Date();
+	  var yyyy = d.getFullYear().toString();
+	  var mm = lpad((d.getMonth()+1).toString(),2);
+	  var dd = lpad(d.getDate().toString(),2);
+	  var hr = lpad(d.getHours().toString(),2);
+	  var min = lpad(d.getSeconds().toString(),2);
+	  return yyyy + mm + dd + "T" + hr + min; 
+  };
+  
+  
+  function lpad(number, digits) {
+	while(number.toString().length < digits) {
+		number = 0 + number.toString();
+	}
+	return number;
+  };
+
+  function wait(ms) {
+    var start = new Date().getTime();
+    var end = start;
+    while(end < start + ms) {
+      end = new Date().getTime();
+    }
+  };  
+  
+
   
 //End jQuery  
 });
-
-
-
-
-//Function changes image and displays winner
-function rpsFunction(urps) {
-
-// Stats
-var tc = Number(document.getElementById("tcount").value);
-tc = tc + 1;
-document.getElementById("tcount").value = tc;
-var wc = Number(document.getElementById("wcount").value);
-
-// AI Selection
-var irps = Math.random();
-if (irps < 0.33){
-   irps = 0
-} else if (irps >= 0.33 && irps < 0.66){
-   irps = 1
-} else {
-   irps = 2
-}
-
-// Update border on selected img
-document.getElementById("ur").border = "0";
- 
-// Spin class
-document.getElementById(irps).className = "smpic spin";
-
-
-//console.log(urps);
-//console.log(irps);
-
-
-if (urps=="ur" && irps==2) { 
-urps = "You Win!";
-wc = wc + 1;
-}
-
-// Update
-document.getElementById("wcount").value = wc;
-document.getElementById("t").innerHTML = 
-"Click the icon below to make your selection. " + urps + " Win Percentage: " + (Math.floor((wc/tc)*100));
-
-}
-
-function wait(ms){
-   var start = new Date().getTime();
-   var end = start;
-   while(end < start + ms) {
-     end = new Date().getTime();
-  }
-}
-
