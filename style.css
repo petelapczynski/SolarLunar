@@ -1,19 +1,116 @@
-table {
-    border-spacing: 0;
-    border-collapse: collapse;
-	table-layout: auto; 
-}
-td {
-	text-align: center;
-	align-items: center;
-	padding: 2px;
-}
-th {
-    padding: 2px;
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+.inside-h-align {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%,0%)
 }
 
-.fade-in-on-load {animation-duration: 2.3s; animation-name: fadeInOnLoad;}
+.worldmap {
+	border-radius: 35px;
+    width: auto;
+	max-width: 100%;
+	display: none;
+	width: 80vw;
+	align-self: center;
+	margin: 0 auto;	
+}
+/*
+.fade-in-on-load {animation-duration: 1.0s; animation-name: fadeInOnLoad;}
 @keyframes fadeInOnLoad {
 0%,50% {opacity: 0;}
 100% {opacity: 1;}
+}
+*/
+
+
+body {
+	display: flex;
+	//height: 100vh;
+	font-family: 'Roboto', sans-serif;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.container100 {
+	width: 95vw;
+	align-self: center;
+	margin: 0 0;
+	position: relative;
+	text-align: center;
+}
+
+.container50 {
+	width: 45vw;
+	align-self: center;
+	margin: 0 0;
+	position: relative;
+	text-align: center;
+}
+
+text.clock {
+	font-weight: 700;
+	font-family: 'Open Sans', sans-serif;
+}
+
+/*
+#home {
+	position: absolute;
+	top: 0px; 
+	left = 0px; 
+    height: 10px; 
+	width: 10px; 
+	background-color: yellow;
+	margin: 0 auto;
+}
+*/
+
+#home {
+   margin: 0 auto;
+   position: absolute;
+   display: block;
+   color: yellow;
+   width: 0px;
+   height: 0px;
+   border-right:  9px solid transparent;
+   border-bottom: 6px  solid yellow;
+   border-left:   9px solid transparent;
+   -moz-transform:    rotate(35deg);
+   -webkit-transform: rotate(35deg);
+   -ms-transform:     rotate(35deg);
+   -o-transform:      rotate(35deg);
+}
+#home:before {
+   border-bottom: 7px solid yellow;
+   border-left: 3px solid transparent;
+   border-right: 3px solid transparent;
+   position: absolute;
+   height: 0;
+   width: 0;
+   top: -5px;
+   left: -6px;
+   display: block;
+   content: '';
+   -webkit-transform: rotate(-35deg);
+   -moz-transform:    rotate(-35deg);
+   -ms-transform:     rotate(-35deg);
+   -o-transform:      rotate(-35deg);
+}
+#home:after {
+   position: absolute;
+   display: block;
+   color: yellow;
+   top: 0px;
+   left: -9px;
+   width: 0px;
+   height: 0px;
+   border-right: 9px solid transparent;
+   border-bottom: 6px solid yellow;
+   border-left: 9px solid transparent;
+   -webkit-transform: rotate(-70deg);
+   -moz-transform:    rotate(-70deg);
+   -ms-transform:     rotate(-70deg);
+   -o-transform:      rotate(-70deg);
+   content: '';
 }
