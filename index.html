@@ -8,9 +8,7 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
 
 <link rel="stylesheet" href="style.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<!--<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenLite.min.js"></script>-->
-<!-- Not using CSSPlugin and TweenMax
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/plugins/CSSPlugin.min.js"></script>-->
+<!-- TweenMax includes others -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenMax.min.js"></script>
 
 <script src="javascript.js"></script>
@@ -24,35 +22,35 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
 <!-- Astronomy data -->
 <div class="container100">
 
-  <div class="container100 eightcolumns" style="width:100%; float: left; position: relative; padding:0 10px; margin:0; -webkit-box-sizing:border-box; box-sizing: border-box;">
+  <div class="container100">
     
-	<div class="container100 row" style="width:100%; display: block; box-sizing: border-box; display: table; margin: 15px 0px;">
-      <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Sunrise">
-	    <span>Sunrise: </span><span id="ssunrise"></span>
+	<div class="container75">
+      <div class="column3">
+	    <img class="images" src="img/sunrise.png" alt="Sunrise">
+	    <div id="dsunrise" class="details"></div>
 	  </div>
-	  <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Sunset">
-	    <span>Sunset: </span><span id="ssunset"></span>
+	  <div class="column3">
+	    <img class="images" src="img/sunset.png" alt="Sunset">
+	    <div id="dsunset" class="details"></div>
 	  </div>
-	  <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Day Length">
-	    <span>Day length: </span><span id="sdaylength"></span>
+	  <div class="column3">
+	    <img class="images" src="img/daylength.png" alt="Day Length">
+	    <div id="ddaylength" class="details"></div>
 	  </div>
     </div>
     
-	<div class="container100 row" style="width:100%; display: block; box-sizing: border-box; display: table; margin: 15px 0px;">
-      <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Moonrise">
-	    <span>Moonrise: </span><span id="smoonrise"></span>
+	<div class="container75">
+      <div class="column3">
+	    <img class="images" src="img/moonrise.png" alt="Moonrise">
+	    <div id="dmoonrise" class="details"></div>
 	  </div>
-	  <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Moonset">
-	    <span>Moonset: </span><span id="smoonset"></span>
+	  <div class="column3">
+	    <img class="images" src="img/moonset.png" alt="Moonset">
+	   <div id="dmoonset" class="details"></div>
 	  </div>
-	  <div class="column" style="width: 33%; float: left; position: relative; display: block;">
-	    <img style="display:block; vertical-align:middle;" src="" alt="Moon Phase">
-	    <span>Moon Phase: </span><span id="smoonphase"></span>
+	  <div class="column3">
+	    <img id="imgmoonphase" class="images" src="" alt="Moon Phase">
+	    <div id="dmoonphase" class="details"></div>
 	  </div>
     </div>  
   
@@ -63,7 +61,6 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
 <!--World Maps -->  
 <h2 id="hboth" align="center">Day and Night World Map</h2>
 <div id="dboth" class="container100">
-
   <div id="home"></div>
   <img id="sunimg1" alt="Earth map showing sun light" class="worldmap fade-in-on-load" src="">  
   <img id="moonimg1" alt="Earth map showing moon light" class="worldmap fade-in-on-load" src="">
@@ -74,207 +71,6 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
 Based on https://dribbble.com/shots/2867210-Sunset-sunrise-widget-animation
 -->
 <div class="container100">
-
-<!-- <div class="container50" style=""> -->
-<!-- Sun -->
-<!--
-	<svg class="container50" version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="107 -87 740 666" enable-background="new 107 -87 740 666" xml:space="preserve">
-<line id="hr" fill="none" stroke="#CFCFCF" stroke-width="2.1012" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="802" y1="248.8" x2="152" y2="248.8"/>
-<path id="outline_x5F_bg" fill="none" stroke="#D2E0EC" stroke-width="8.9673" stroke-miterlimit="10" d="M753.1,245
-	c0,151.4-122.8,274.2-274.2,274.2S204.7,396.5,204.7,245S327.4-29.2,478.9-29.2C622.8-29.2,753.1,93.5,753.1,245z"/>
-<path id="outline_x5F_up" fill="none" stroke="#FAB60C" stroke-width="9.9996" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M753.1,245.8c0-151.5-123-273.9-274.2-275C327.8-28.1,204.7,94.5,204.7,246"/>
-<path id="outline_x5F_down" fill="none" stroke="#8097A7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M204.5,250c0,151.5,124.2,269.2,273.2,271.2C629,520.2,753,402.5,753,251"/>
-<g id="sunset_x5F_icon_1_">
-	<path fill="none" stroke="#8097A7" stroke-width="3" stroke-miterlimit="10" d="M494.3,318.2c0-8.3-6.8-15.2-15.2-15.2
-		c-8.3,0-15.2,6.8-15.2,15.2"/>
-	<path fill="#8097A7" stroke="#8097A7" stroke-width="2" stroke-miterlimit="10" d="M480.5,318.5v12.3l2.9-2.9
-		c0.3-0.3,0.6-0.4,0.9-0.4c0.7,0,1.3,0.6,1.3,1.3c0,0.4-0.1,0.7-0.4,0.9l-5.1,5.1c-0.2,0.2-0.5,0.4-0.9,0.4s-0.7-0.2-0.9-0.4
-		l-5.1-5.1c-0.3-0.3-0.4-0.6-0.4-0.9c0-0.8,0.7-1.3,1.3-1.3c0.4,0,0.7,0.1,0.9,0.4l2.9,2.9v-12.3c0-0.7,0.6-1.3,1.3-1.3
-		C479.9,317.2,480.5,317.9,480.5,318.5z"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="502.9" y1="314.4" x2="508.1" y2="314.4"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="496" y1="301" x2="499.7" y2="297.3"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="454.8" y1="314.4" x2="449.6" y2="314.4"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="461.7" y1="301" x2="458" y2="297.3"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="479.2" y1="295.1" x2="479.2" y2="289.9"/>
-</g>
-<g id="sunrise_x5F_icon">
-	<g>
-		<path fill="none" stroke="#FAB60C" stroke-width="3" stroke-miterlimit="10" d="M464,75.9c0-8.3,6.8-15.2,15.2-15.2
-			c8.3,0,15.2,6.8,15.2,15.2"/>
-	</g>
-	<path fill="#FAB60C" stroke="#FAB60C" stroke-miterlimit="10" d="M480.5,60.4V48l2.9,2.9c0.3,0.3,0.6,0.4,0.9,0.4
-		c0.7,0,1.3-0.6,1.3-1.3c0-0.4-0.1-0.7-0.4-0.9l-5.1-5.1c-0.2-0.2-0.5-0.4-0.9-0.4s-0.7,0.2-0.9,0.4l-5.1,5.1
-		c-0.3,0.3-0.4,0.6-0.4,0.9c0,0.8,0.7,1.3,1.3,1.3c0.4,0,0.7-0.1,0.9-0.4l2.9-2.9v12.3c0,0.7,0.6,1.3,1.3,1.3
-		C479.9,61.7,480.5,61.1,480.5,60.4z"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="502.9" y1="72" x2="508.1" y2="72"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="496" y1="58.7" x2="499.7" y2="55"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="454.8" y1="72" x2="449.6" y2="72"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="461.7" y1="58.7" x2="458" y2="55"/>
-</g>
-<g id="sun">
-	<g id="icon_x5F_bg_1_">
-		<g>
-			<circle fill="#FFFFFF" cx="202.6" cy="246" r="27.6"/>
-		</g>
-	</g>
-	<g id="sun_x5F_icon">
-		<circle fill="#FAB60C" cx="202.1" cy="246" r="8.8"/>
-		<path fill="none" stroke="#B20000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-			M206,243.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="202.1" y1="236.3" x2="202.1" y2="232.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="195.2" y1="239.1" x2="192.5" y2="236.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="192.3" y1="246" x2="188.5" y2="246"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="195.2" y1="252.9" x2="192.5" y2="255.6"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="202.6" y1="255.5" x2="202.6" y2="259.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="209.3" y1="252.4" x2="211.9" y2="255"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="211.6" y1="245.5" x2="215.5" y2="245.5"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="208.4" y1="238.8" x2="211.2" y2="236.1"/>
-	</g>
-</g>
-<g id="moon">
-		<g>
-			<circle fill="#FFFFFF" cx="751" cy="246" r="27.6"/>
-		</g>
-	</g>
-	<path id="moon_x5F_icon" fill="#8097A7" d="M750.6,233.9c-22.2,11.1,4.6,37.7,15.9,15.9C756.6,253,747.4,244.6,750.6,233.9z"/>
-</g>
-<path id="horizon_x5F_wrapper" fill="#FFFDFD" stroke="#CFCFCF" stroke-width="1.9304" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M518.4,267.7h-80.8c-9.8,0-17.7-8-17.7-17.7l0,0c0-9.8,8-17.7,17.7-17.7h80.8c9.8,0,17.7,8,17.7,17.7l0,0
-	C536,259.8,528.1,267.7,518.4,267.7z"/>
-<text transform="matrix(1 0 0 1 441.9971 255.4375)" font-family="'Roboto'" font-size="17.053">HORIZON</text>
-<rect x="420" y="95.9" fill="none" width="131.1" height="33"/>
-<text transform="matrix(1 0 0 1 420.05 123.2599)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Sunrise</text>
-<rect x="406.7" y="142.4" fill="none" width="145" height="51.6"/>
-<text id="tsunrise" transform="matrix(1 0 0 1 416.7 179.4078)" font-size="48" class="clock"></text>
-<rect x="423" y="355.9" fill="none" width="131.1" height="33"/>
-<text transform="matrix(1 0 0 1 423.05 383.2599)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Sunset</text>
-<rect x="407.7" y="405.4" fill="none" width="145" height="51.6"/>
-<text id="tsunset" transform="matrix(1 0 0 1 417.7 442.4078)" font-size="48" class="clock"></text>
-</svg> 
--->
-<!-- </div> -->
-
-<!-- Moon -->
-<!-- <div class="container50"> -->
-<!--
-<svg class="container50" version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="107 -87 740 666" enable-background="new 107 -87 740 666" xml:space="preserve">
-<line id="hr" fill="none" stroke="#CFCFCF" stroke-width="2.1012" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="802" y1="248.8" x2="152" y2="248.8"/>
-<path id="outline_x5F_bg" fill="none" stroke="#D2E0EC" stroke-width="8.9673" stroke-miterlimit="10" d="M753.1,245
-	c0,151.4-122.8,274.2-274.2,274.2S204.7,396.5,204.7,245S327.4-29.2,478.9-29.2C622.8-29.2,753.1,93.5,753.1,245z"/>
-<path id="outline_x5F_up" fill="none" stroke="#FAB60C" stroke-width="9.9996" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M753.1,245.8c0-151.5-123-273.9-274.2-275C327.8-28.1,204.7,94.5,204.7,246"/>
-<path id="outline_x5F_down" fill="none" stroke="#8097A7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M204.5,250c0,151.5,124.2,269.2,273.2,271.2C629,520.2,753,402.5,753,251"/>
-<g id="sunset_x5F_icon_1_">
-	<path fill="none" stroke="#8097A7" stroke-width="3" stroke-miterlimit="10" d="M494.3,318.2c0-8.3-6.8-15.2-15.2-15.2
-		c-8.3,0-15.2,6.8-15.2,15.2"/>
-	<path fill="#8097A7" stroke="#8097A7" stroke-width="2" stroke-miterlimit="10" d="M480.5,318.5v12.3l2.9-2.9
-		c0.3-0.3,0.6-0.4,0.9-0.4c0.7,0,1.3,0.6,1.3,1.3c0,0.4-0.1,0.7-0.4,0.9l-5.1,5.1c-0.2,0.2-0.5,0.4-0.9,0.4s-0.7-0.2-0.9-0.4
-		l-5.1-5.1c-0.3-0.3-0.4-0.6-0.4-0.9c0-0.8,0.7-1.3,1.3-1.3c0.4,0,0.7,0.1,0.9,0.4l2.9,2.9v-12.3c0-0.7,0.6-1.3,1.3-1.3
-		C479.9,317.2,480.5,317.9,480.5,318.5z"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="502.9" y1="314.4" x2="508.1" y2="314.4"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="496" y1="301" x2="499.7" y2="297.3"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="454.8" y1="314.4" x2="449.6" y2="314.4"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="461.7" y1="301" x2="458" y2="297.3"/>
-	
-		<line fill="none" stroke="#8097A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="479.2" y1="295.1" x2="479.2" y2="289.9"/>
-</g>
-<g id="sunrise_x5F_icon">
-	<g>
-		<path fill="none" stroke="#FAB60C" stroke-width="3" stroke-miterlimit="10" d="M464,75.9c0-8.3,6.8-15.2,15.2-15.2
-			c8.3,0,15.2,6.8,15.2,15.2"/>
-	</g>
-	<path fill="#FAB60C" stroke="#FAB60C" stroke-miterlimit="10" d="M480.5,60.4V48l2.9,2.9c0.3,0.3,0.6,0.4,0.9,0.4
-		c0.7,0,1.3-0.6,1.3-1.3c0-0.4-0.1-0.7-0.4-0.9l-5.1-5.1c-0.2-0.2-0.5-0.4-0.9-0.4s-0.7,0.2-0.9,0.4l-5.1,5.1
-		c-0.3,0.3-0.4,0.6-0.4,0.9c0,0.8,0.7,1.3,1.3,1.3c0.4,0,0.7-0.1,0.9-0.4l2.9-2.9v12.3c0,0.7,0.6,1.3,1.3,1.3
-		C479.9,61.7,480.5,61.1,480.5,60.4z"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="502.9" y1="72" x2="508.1" y2="72"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="496" y1="58.7" x2="499.7" y2="55"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="454.8" y1="72" x2="449.6" y2="72"/>
-	
-		<line fill="none" stroke="#FAB60C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="461.7" y1="58.7" x2="458" y2="55"/>
-</g>
-<g id="sun">
-	<g id="icon_x5F_bg_1_">
-		<g>
-			<circle fill="#FFFFFF" cx="202.6" cy="246" r="27.6"/>
-		</g>
-	</g>
-	<g id="sun_x5F_icon">
-		<circle fill="#FAB60C" cx="202.1" cy="246" r="8.8"/>
-		<path fill="none" stroke="#B20000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-			M206,243.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="202.1" y1="236.3" x2="202.1" y2="232.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="195.2" y1="239.1" x2="192.5" y2="236.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="192.3" y1="246" x2="188.5" y2="246"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="195.2" y1="252.9" x2="192.5" y2="255.6"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="202.6" y1="255.5" x2="202.6" y2="259.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="209.3" y1="252.4" x2="211.9" y2="255"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="211.6" y1="245.5" x2="215.5" y2="245.5"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="208.4" y1="238.8" x2="211.2" y2="236.1"/>
-	</g>
-</g>
-<g id="moon">
-		<g>
-			<circle fill="#FFFFFF" cx="751" cy="246" r="27.6"/>
-		</g>
-	</g>
-	<path id="moon_x5F_icon" fill="#8097A7" d="M750.6,233.9c-22.2,11.1,4.6,37.7,15.9,15.9C756.6,253,747.4,244.6,750.6,233.9z"/>
-</g>
-<path id="horizon_x5F_wrapper" fill="#FFFDFD" stroke="#CFCFCF" stroke-width="1.9304" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M518.4,267.7h-80.8c-9.8,0-17.7-8-17.7-17.7l0,0c0-9.8,8-17.7,17.7-17.7h80.8c9.8,0,17.7,8,17.7,17.7l0,0
-	C536,259.8,528.1,267.7,518.4,267.7z"/>
-<text transform="matrix(1 0 0 1 441.9971 255.4375)" font-family="'Roboto'" font-size="17.053">HORIZON</text>
-<rect x="420" y="95.9" fill="none" width="131.1" height="33"/>
-<text transform="matrix(1 0 0 1 420.05 123.2599)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Moonrise</text>
-<rect x="406.7" y="142.4" fill="none" width="145" height="51.6"/>
-<text id="tmoonrise" transform="matrix(1 0 0 1 416.7 179.4078)" font-size="48" class="clock"></text>
-<rect x="423" y="355.9" fill="none" width="131.1" height="33"/>
-<text transform="matrix(1 0 0 1 423.05 383.2599)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Moonset</text>
-<rect x="407.7" y="405.4" fill="none" width="145" height="51.6"/>
-<text id="tmoonset" transform="matrix(1 0 0 1 417.7 442.4078)" font-size="48" class="clock"></text>
-</svg>
-
-</span>
-</div>
-
--->
 <!--Sun/Moon -->
 <div class="container100">
 <svg class="" version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="500" width="1000" xml:space="preserve">

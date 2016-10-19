@@ -1,5 +1,6 @@
 //Start jQuery
 var objjson;
+var tl;
 jQuery(document).ready(function($) {
   //ajax web api call http://api.wunderground.com/api/73fc3d1621dbe642/alerts/astronomy/conditions/forecast10day/q/MI/48353.json
   
@@ -34,7 +35,7 @@ jQuery(document).ready(function($) {
   */
   
    //Toggle between sun and moon map
-   $("#dboth").click(function(){
+   $(".worldmap").click(function(){
 	  if ($("#hboth").text() == "Moon Light World Map") {
 		$("#sunimg1").show("fast");
 		$("#moonimg1").hide("fast");
@@ -49,7 +50,7 @@ jQuery(document).ready(function($) {
 
    //SVG Animation on click
    $("#widget").click(function(){
-      TweenSunMoon();
+      //TweenSunMoon();
    });
 	  	  
 
@@ -75,9 +76,9 @@ jQuery(document).ready(function($) {
 	$("#tsunrise").html("Sunrise: " + sr);
 	$("#tsunset").html("Sunset: " + ss);
 	
-	$("#ssunrise").text(sr);
-	$("#ssunset").text(ss);	
-	$("#sdaylength").text(dl);
+	$("#dsunrise").text("Sunrise: " + sr);
+	$("#dsunset").text("Sunset: " + ss);	
+	$("#ddaylength").text("Day Length: " + dl);
 	
 	//Moonrise/Moonset/MoonPhase
 	console.log("Moonrise: " + json.moon_phase.moonrise.hour + ":" + json.moon_phase.moonrise.minute);
@@ -86,16 +87,17 @@ jQuery(document).ready(function($) {
 	var mr = AMPM(json.moon_phase.moonrise.hour, json.moon_phase.moonrise.minute);
 	var ms = AMPM(json.moon_phase.moonset.hour, json.moon_phase.moonset.minute);
 	var mp = json.moon_phase.phaseofMoon + ", " + json.moon_phase.percentIlluminated + "% Illuminated";
-	
+	var mpic = "img/moon" + round10(json.moon_phase.percentIlluminated) + ".png"
 	console.log("Moonrise: " + mr + " Moonset: " + ms + " MoonPhase: " + json.moon_phase.percentIlluminated + "% Illuminated" );
 	
 	//Update DOM
 	$("#tmoonrise").html("Moonrise: " + mr);
 	$("#tmoonset").html("Moonset: " + ms);
 	
-	$("#smoonrise").text(mr);
-	$("#smoonset").text(ms);
-	$("#smoonphase").text(mp);
+	$("#dmoonrise").text("Moonrise: " + mr);
+	$("#dmoonset").text("Moonset: " + ms);
+	$("#dmoonphase").text("Moon Phase:" + mp);
+	$("#imgmoonphase").attr("src", mpic);
 	
 	//Loop through json object
 	//$.each(json, function(){
@@ -106,6 +108,8 @@ jQuery(document).ready(function($) {
 	
 	//Set map home location
 	setHome();
+	//Rotate loop
+    TweenMax.to("#home", 20, {rotation:"3600", ease:Linear.easeInOut, repeat:-1});
 	
 	//Start SVG Animation
 	TweenSunMoon();
@@ -222,6 +226,11 @@ function AMPM(Hrs, Min) {
   };  
 };  
 
+//round to nearest 10
+function round10(number){
+  	return (Math.round(number / 10) * 10);
+};
+
   
 function convertMinsToHrsMins(minutes) {
   var h = Math.floor(minutes / 60);
@@ -245,11 +254,34 @@ function setHome(){
   $("#home").css({"top": (h * .26) + "px", "left": (w * .26 + ((o - w) * .5)) + "px"});
 };
 
+
 //SVG animation 
 function TweenSunMoon() {
+//https://greensock.com/tweenmax
+
+
 //TweenLite.defaultEase = Power1.easeInOut;
 TweenLite.defaultEase = Linear.easeNone;
 
+//Sun animation
+  var tl = new TimelineMax({repeat:-1});
+  //start - hide items
+  tl.add(TweenLite.to("#outline_x5F_up", 0, {autoAlpha: 0}) );
+  tl.add(TweenLite.to("#sun", 0, {autoAlpha:0, x:0, y:0}) );
+  tl.add(TweenLite.to("#moon", 0, {autoAlpha:0, x:0, y:0}) );
+  //transition sun in and arc
+  tl.add(TweenLite.to("#sun", 1, {autoAlpha: 1}) );
+  tl.add(TweenLite.to("#sun", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
+  tl.add(TweenLite.to("#sun", 1, {autoAlpha: 0}) ); 
+  //Daylight
+  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 1 }), 1 );
+  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 0 }), 6);
+  //transition moon in and arc 
+  tl.add(TweenLite.to("#moon", 1, {autoAlpha: 1}),6 );
+  tl.add(TweenLite.to("#moon", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
+  tl.add(TweenLite.to("#moon", 1, {autoAlpha: 0}) );
+  
+  
 //var tween;
 //var opacity = false;
 //var motionPathMoon = MorphSVGPlugin.pathDataToBezier('#outline_x5F_down', {align: '#moon'}).reverse();
@@ -258,14 +290,14 @@ TweenLite.defaultEase = Linear.easeNone;
 //var strokeUp = "#outline_x5F_up";
 //var strokeDown = "#outline_x5F_down";
 
-TweenLite.set('#moon', {xPercent: 0, yPercent: 0, autoAlpha: 0});
-TweenLite.set('#sun', {xPercent: 0, yPercent: 0, autoAlpha: 0});
+//TweenLite.set('#moon', {xPercent: 0, yPercent: 0, autoAlpha: 0});
+//TweenLite.set('#sun', {xPercent: 0, yPercent: 0, autoAlpha: 0});
 
-TweenLite.to("#moon", 3, {delay: 13, autoAlpha: 1});
-TweenLite.to("#moon", 10, {delay: 16, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
+//TweenLite.to("#moon", 3, {delay: 13, autoAlpha: 1});
+//TweenLite.to("#moon", 10, {delay: 16, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
 
-TweenLite.to("#sun", 3, {delay: 0, autoAlpha: 1});
-TweenLite.to("#sun", 10, {delay: 3, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
+//TweenLite.to("#sun", 3, {delay: 0, autoAlpha: 1});
+//TweenLite.to("#sun", 10, {delay: 3, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
 
 ///Using MorphSVGPlugin
 //TweenMax.to("#sun", 3, {bezier:{values:motionPathSun, type:"cubic"}});
@@ -275,10 +307,31 @@ TweenLite.to("#sun", 10, {delay: 3, bezier:{values:[{x:0, y:0},{x:450, y:-650},{
 //TweenMax.to("#moon", 3, {delay: 3, bezier:{values:motionPathMoon, type:"cubic"}});
 
 
-TweenLite.set("#outline_x5F_up", { scaleX: -1, transformOrigin: "center center", drawSVG: 0 });
+//TweenLite.set("#outline_x5F_up", { scaleX: -1, transformOrigin: "center center", drawSVG: 0 });
 //TweenLite.set(strokeDown, { scaleX: -1, transformOrigin: "center center", drawSVG: 0 });
 
-TweenLite.to("#outline_x5F_up", 3, {drawSVG: true });
-TweenLite.to("#outline_x5F_up", 0.2, {delay: 3, autoAlpha: 0 });
+//TweenLite.to("#outline_x5F_up", 3, {drawSVG: true });
+//TweenLite.to("#outline_x5F_up", 0.2, {delay: 3, autoAlpha: 0 });
 //TweenLite.to(strokeDown, 3, {delay: 3, drawSVG: true });
 };
+
+function test1(){
+//https://greensock.com/tweenmax
+//Sun animation
+  var tl = new TimelineMax({repeat:-1});
+  //start - hide items
+  tl.add(TweenLite.to("#outline_x5F_up", 0, {autoAlpha: 0}) );
+  tl.add(TweenLite.to("#sun", 0, {autoAlpha:0, x:0, y:0}) );
+  tl.add(TweenLite.to("#moon", 0, {autoAlpha:0, x:0, y:0}) );
+  //transition sun in and arc
+  tl.add(TweenLite.to("#sun", 2, {autoAlpha: 1}) );
+  tl.add(TweenLite.to("#sun", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}), 2);
+  tl.add(TweenLite.to("#sun", 2, {autoAlpha: 0}) ); 
+  //Daylight
+  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 1 }), 2 );
+  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 0 }), 7);
+  //transition moon in and arc 
+  tl.add(TweenLite.to("#moon", 2, {autoAlpha: 1}) );
+  tl.add(TweenLite.to("#moon", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
+  tl.add(TweenLite.to("#moon", 2, {autoAlpha: 0}) );
+}
