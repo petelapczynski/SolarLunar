@@ -17,7 +17,50 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
 </head>
 
 <body bgcolor="#E6E6FA">
-<h1 align="center">Solar / Lunar / Weather</h1>
+
+<!-- Sunrise/Sunset Animation
+Based on https://dribbble.com/shots/2867210-Sunset-sunrise-widget-animation
+-->
+<div class="container100">
+<!--Sun/Moon -->
+<div class="container100">
+<svg class="" version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="425" width="1000" xml:space="preserve">
+  <line id="hr" fill="none" stroke="#CFCFCF" stroke-width="2 stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="0" y1="400" x2="1000" y2="400" />
+  <path id="outline_x5F_bg" fill="none" stroke="#D2E0EC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 25,400 Q 500,-200 975 400" />
+  <path id="outline_x5F_up" fill="none" stroke="#FAB60C" stroke-width="9.9996" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 25,400 Q 500,-200 975 400" />
+  <g id="moon">
+    <g>
+      <circle fill="#FFFFFF" fill-opacity="0.4" cx="27.6" cy="426" r="27.6" />
+	</g>
+    <path id="moon_x5F_icon" fill="#8097A7" d="M 27.2,413.9 c-22.2,11.1,4.6,37.7,15.9,15.9 C 33.2,433,24,424.6,27.2,413.9z" />
+  </g>
+  <g id="sun">
+    <g id="icon_x5F_bg_1_">
+       <g>
+         <circle fill="#FFFFFF" fill-opacity="0.6" cx="27.6" cy="426" r="27.6" />
+       </g>
+	</g>
+    <g id="sun_x5F_icon">
+      <circle fill="#FAB60C" cx="27.1" cy="426" r="8.8" />
+      <path fill="none" stroke="#B20000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 31,423.4" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="27.1" y1="416.3" x2="27.1" y2="412.4" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="20.2" y1="419.1" x2="17.5" y2="416.4" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="17.3" y1="426" x2="13.5" y2="426" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="20.2" y1="432.9" x2="17.5" y2="435.6" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="27.6" y1="435.5" x2="27.6" y2="439.4" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="34.3" y1="432.4" x2="36.9" y2="435" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="36.6" y1="425.5" x2="40.5" y2="425.5" />
+      <line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="33.4" y1="418.8" x2="36.2" y2="416.1" />
+	</g>
+  </g>
+  <g id="horizon">
+    <path id="horizon_x5F_wrapper" fill="#FFFDFD" stroke="#CFCFCF" stroke-width="1.9304" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 538.4,417.7h-80.8c-9.8,0-17.7-8-17.7-17.7l0,0c0-9.8,8-17.7,17.7-17.7h80.8c9.8,0,17.7,8,17.7,17.7l0,0 C 556,409.8,548.1,417.7,538.4,417.7z" />
+    <text transform="matrix(1 0 0 1 462 405.4)" font-family="'Roboto'" font-size="17.053">HORIZON</text>
+  </g>
+  <text id="title" class="clock" transform="matrix(1 0 0 1 390 50)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Solar / Lunar</text>
+</svg>
+</div>
+</div>
 
 <!-- Astronomy data -->
 <div class="container100">
@@ -64,66 +107,6 @@ https://www.wunderground.com/weather/api/d/docs?d=data/index&MR=1
   <div id="home"></div>
   <img id="sunimg1" alt="Earth map showing sun light" class="worldmap fade-in-on-load" src="">  
   <img id="moonimg1" alt="Earth map showing moon light" class="worldmap fade-in-on-load" src="">
-  
 </div>  
-
-<!-- Sunrise/Sunset Animation 
-Based on https://dribbble.com/shots/2867210-Sunset-sunrise-widget-animation
--->
-<div class="container100">
-<!--Sun/Moon -->
-<div class="container100">
-<svg class="" version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="500" width="1000" xml:space="preserve">
-<line id="hr" fill="none" stroke="#CFCFCF" stroke-width="2 stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="0" y1="400" x2="1000" y2="400"/>
-<path id="outline_x5F_bg" fill="none" stroke="#D2E0EC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 25,400 Q 500,-200 975 400"/>
-<path id="outline_x5F_up" fill="none" stroke="#FAB60C" stroke-width="9.9996" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 25,400 Q 500,-200 975 400"/>
-<g id="sun">
-	<g id="icon_x5F_bg_1_">
-		<g>
-			<circle fill="#FFFFFF" cx="27.6" cy="426" r="27.6"/>
-		</g>
-	</g>
-	<g id="sun_x5F_icon">
-		<circle fill="#FAB60C" cx="27.1" cy="426" r="8.8"/>
-		<path fill="none" stroke="#B20000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 31,423.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="27.1" y1="416.3" x2="27.1" y2="412.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="20.2" y1="419.1" x2="17.5" y2="416.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="17.3" y1="426" x2="13.5" y2="426"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="20.2" y1="432.9" x2="17.5" y2="435.6"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="27.6" y1="435.5" x2="27.6" y2="439.4"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="34.3" y1="432.4" x2="36.9" y2="435"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="36.6" y1="425.5" x2="40.5" y2="425.5"/>
-		
-			<line fill="none" stroke="#FAB60C" stroke-width="0.9095" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="33.4" y1="418.8" x2="36.2" y2="416.1"/>
-	</g>
-</g>
-<g id="moon">
-	<g>
-		<circle fill="#FFFFFF" cx="27.6" cy="426" r="27.6"/>
-	</g>
-	<path id="moon_x5F_icon" fill="#8097A7" d="M 27.2,413.9 c-22.2,11.1,4.6,37.7,15.9,15.9 C 33.2,433,24,424.6,27.2,413.9z"/>
-</g>
-
-<g id="horizon">
-<path id="horizon_x5F_wrapper" fill="#FFFDFD" stroke="#CFCFCF" stroke-width="1.9304" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 538.4,417.7h-80.8c-9.8,0-17.7-8-17.7-17.7l0,0c0-9.8,8-17.7,17.7-17.7h80.8c9.8,0,17.7,8,17.7,17.7l0,0 C 556,409.8,548.1,417.7,538.4,417.7z"/>
-<text transform="matrix(1 0 0 1 462 405.4)" font-family="'Roboto'" font-size="17.053">HORIZON</text>
-</g>
-
-<text id="tsunrise" class="clock" transform="matrix(1 0 0 1 75 440)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Sunrise: </text>
-<text id="tsunset" class="clock" transform="matrix(1 0 0 1 650 440)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Sunset: </text>
-<text id="tmoonrise" class="clock" transform="matrix(1 0 0 1 75 480)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Moonrise: </text>
-<text id="tmoonset" class="clock" transform="matrix(1 0 0 1 650 480)" fill="#6B6B6B" font-family="'Roboto'" font-size="36">Moonset: </text>
-
-</svg>
-</div>
-</div>
-
 </body>
 </html>

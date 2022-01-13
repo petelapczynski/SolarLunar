@@ -1,76 +1,66 @@
+var lat = 42;
+var lon = -83;
 //Start jQuery
-var objjson;
-var tl;
 jQuery(document).ready(function($) {
-  //ajax web api call http://api.wunderground.com/api/73fc3d1621dbe642/alerts/astronomy/conditions/forecast10day/q/MI/48353.json
-  
   //Load Sun and Moon Maps
   loadMap("sunimg1", yyyymmdd(), "sun");
-
   setInterval(function(){ loadMap("sunimg1", yyyymmdd(), "sun");},900000);
   $("#sunimg1").show("fast");  
   
   loadMap("moonimg1", yyyymmdd(), "moon");
   setInterval(function(){ loadMap("moonimg1", yyyymmdd(), "moon");},900000);
   $("#moonimg1").hide();
-   
-  //Draw dot on image
-  /*
-  // Michigan location is 
-  <div style="position: absolute; top: 432px; left: 404px; width: 10px; height: 10px; background-color: rgb(0,0,0);"></div>
-  
-  $("img").click(function(ev){
-	  mouseX = ev.pageX;
-	  mouseY = ev.pageY;
-
-	  $("body").append($("<div></div>")
-	    .css("position","absolute")
-		.css("top",mouseY + "px")
-		.css("left",mouseX + "px")
-		.css("width","10px")
-		.css("height","10px")
-		.css("background-color","#000000")
-	  );
-  });
-  */
-  
-   //Toggle between sun and moon map
-   $(".worldmap").click(function(){
-	  if ($("#hboth").text() == "Moon Light World Map") {
+    
+  //Toggle between sun and moon map
+  $(".worldmap").click(function(){
+	if ($("#hboth").text() == "Moon Light World Map") {
 		$("#sunimg1").show("fast");
 		$("#moonimg1").hide("fast");
-		$("#hboth").text("Day and Night World Map")
-	  }
-	  else {
+		$("#hboth").text("Day and Night World Map");
+	}
+	else {
 		$("#sunimg1").hide("fast");
 		$("#moonimg1").show("fast");
-		$("#hboth").text("Moon Light World Map")
-	  }
-   });
+		$("#hboth").text("Moon Light World Map");
+	}
+  });
+  
+  //Reset Map home location on resize
+  $(window).resize(function() {
+    setHome();
+  });
 
-   //SVG Animation on click
-   $("#widget").click(function(){
-      //TweenSunMoon();
-   });
-	  	  
+  // Calculate sun/moon times using suncalc - https://github.com/mourner/suncalc
+    var nowDate = new Date();
+	var sunTimes = SunCalc.getTimes(nowDate, lat, lon, 0);
+	console.log(sunTimes);
+	// nauticalDawn, dawn, sunrise, solarNoon, sunset, dusk, nauticalDusk 
+	var moonTimes = SunCalc.getMoonTimes(nowDate, lat, lon, false)
+	console.log(moonTimes);
+	//rise, set
+	
+	var moonIllumination = SunCalc.getMoonIllumination(nowDate);
+	console.log(moonIllumination);
+	//fraction, phase, angle
 
-  //api call parse json 
-  $.getJSON("http://api.wunderground.com/api/73fc3d1621dbe642/alerts/astronomy/conditions/forecast10day/q/MI/48353.json", function(json) {
-    console.log(json);
-	objjson = json;
-	console.log("Current Temp: " + json.current_observation.temp_f + " API Call"); // log to console
-    $("#temp").innerText =  json.current_observation.temp_f;
-		
+	var calcs = {
+		srHr: sunTimes.sunrise.getHours(),
+		srMin: sunTimes.sunrise.getMinutes(),
+		ssHr: sunTimes.sunset.getHours(),
+		ssMin: sunTimes.sunset.getMinutes(),
+		mrHr: moonTimes.rise.getHours(),
+		mrMin: moonTimes.rise.getMinutes(),
+		msHr: moonTimes.set.getHours(),
+		msMin: moonTimes.set.getMinutes(),
+		mPct: round(moonIllumination.fraction, 2) * 100,
+		mPhase: calcMoonPhase(moonIllumination.phase)
+	}; 
+	
 	//Sunrise/Sunset/DayLength
-	console.log("Sunrise: " + json.sun_phase.sunrise.hour +":"+ json.sun_phase.sunrise.minute);
-	console.log("Sunset: " + json.sun_phase.sunset.hour +":"+ json.sun_phase.sunset.minute);
-	console.log("Day Length: " + convertMinsToHrsMins((json.sun_phase.sunset.hour - json.sun_phase.sunrise.hour)*60 + (json.sun_phase.sunset.minute - json.sun_phase.sunrise.minute)));
-	
-	var sr = AMPM(json.sun_phase.sunrise.hour, json.sun_phase.sunrise.minute);
-	var ss = AMPM(json.sun_phase.sunset.hour, json.sun_phase.sunset.minute);
-	var dl = convertMinsToHrsMins((json.sun_phase.sunset.hour - json.sun_phase.sunrise.hour)*60 + (json.sun_phase.sunset.minute - json.sun_phase.sunrise.minute));
-	
-	console.log("Sunrise: " + sr + " Sunset: " + ss + " Day Length: " + dl);
+	var sr = AMPM(calcs.srHr, calcs.srMin);
+	var ss = AMPM(calcs.ssHr, calcs.ssMin);
+	var dl = convertMinsToHrsMins( (calcs.ssHr - calcs.srHr) * 60 + (calcs.ssMin - calcs.srMin) );
+	console.log("Sunrise: " + sr + ", Sunset: " + ss + ", Day Length: " + dl);
 	
 	//Update DOM
 	$("#tsunrise").html("Sunrise: " + sr);
@@ -81,14 +71,11 @@ jQuery(document).ready(function($) {
 	$("#ddaylength").text("Day Length: " + dl);
 	
 	//Moonrise/Moonset/MoonPhase
-	console.log("Moonrise: " + json.moon_phase.moonrise.hour + ":" + json.moon_phase.moonrise.minute);
-	console.log("Moonset: " + json.moon_phase.moonset.hour + ":" +  json.moon_phase.moonset.minute);
-	console.log("MoonPhase: " + json.moon_phase.phaseofMoon + " %Illuminated: " + json.moon_phase.percentIlluminated);
-	var mr = AMPM(json.moon_phase.moonrise.hour, json.moon_phase.moonrise.minute);
-	var ms = AMPM(json.moon_phase.moonset.hour, json.moon_phase.moonset.minute);
-	var mp = json.moon_phase.phaseofMoon + ", " + json.moon_phase.percentIlluminated + "% Illuminated";
-	var mpic = "img/moon" + round10(json.moon_phase.percentIlluminated) + ".png"
-	console.log("Moonrise: " + mr + " Moonset: " + ms + " MoonPhase: " + json.moon_phase.percentIlluminated + "% Illuminated" );
+	var mr = AMPM(calcs.mrHr, calcs.mrMin);
+	var ms = AMPM(calcs.msHr, calcs.msMin);
+	var mp = calcs.mPhase + ", " + calcs.mPct + "% Illuminated";
+	var mpic = "img/moon" + round10(calcs.mPct) + ".png";
+	console.log("Moonrise: " + mr + ", Moonset: " + ms + ", MoonPhase: " + mp);
 	
 	//Update DOM
 	$("#tmoonrise").html("Moonrise: " + mr);
@@ -98,88 +85,41 @@ jQuery(document).ready(function($) {
 	$("#dmoonset").text("Moonset: " + ms);
 	$("#dmoonphase").text("Moon Phase:" + mp);
 	$("#imgmoonphase").attr("src", mpic);
-	
-	//Loop through json object
-	//$.each(json, function(){
-	//  $.each(this, function(name, value){
-	//    console.log(name + " = " + value);
-	//  });
-	//});
-	
+		
 	//Set map home location
 	setHome();
 	//Rotate loop
     TweenMax.to("#home", 20, {rotation:"3600", ease:Linear.easeInOut, repeat:-1});
 	
 	//Start SVG Animation
-	TweenSunMoon();
-  }); 
-  
-  
-  //local JSON file
- /* 
-  $.getJSON("weather.json", function(json) {
-    console.log(json);
-	objjson = json;
-	console.log("Current Temp: " + json.current_observation.temp_f + " API Call"); // log to console
-    $("#temp").innerText =  json.current_observation.temp_f;
-		
-	//Sunrise/Sunset/DayLength
-	console.log("Sunrise: " + json.sun_phase.sunrise.hour +":"+ json.sun_phase.sunrise.minute);
-	console.log("Sunset: " + json.sun_phase.sunset.hour +":"+ json.sun_phase.sunset.minute);
-	console.log("Day Length: " + convertMinsToHrsMins((json.sun_phase.sunset.hour - json.sun_phase.sunrise.hour)*60 + (json.sun_phase.sunset.minute - json.sun_phase.sunrise.minute)));
-	
-	var sr = AMPM(json.sun_phase.sunrise.hour, json.sun_phase.sunrise.minute);
-	var ss = AMPM(json.sun_phase.sunset.hour, json.sun_phase.sunset.minute);
-	var dl = convertMinsToHrsMins((json.sun_phase.sunset.hour - json.sun_phase.sunrise.hour)*60 + (json.sun_phase.sunset.minute - json.sun_phase.sunrise.minute));
-	
-	console.log("Sunrise: " + sr + " Sunset: " + ss + " Day Length: " + dl);
-	
-	//Update DOM
-	$("#tsunrise").html("Sunrise: " + sr);
-	$("#tsunset").html("Sunset: " + ss);
-	
-	$("#ssunrise").text(sr);
-	$("#ssunset").text(ss);	
-	$("#sdaylength").text(dl);
-	
-	//Moonrise/Moonset/MoonPhase
-	console.log("Moonrise: " + json.moon_phase.moonrise.hour + ":" + json.moon_phase.moonrise.minute);
-	console.log("Moonset: " + json.moon_phase.moonset.hour + ":" +  json.moon_phase.moonset.minute);
-	console.log("MoonPhase: " + json.moon_phase.phaseofMoon + " %Illuminated: " + json.moon_phase.percentIlluminated);
-	var mr = AMPM(json.moon_phase.moonrise.hour, json.moon_phase.moonrise.minute);
-	var ms = AMPM(json.moon_phase.moonset.hour, json.moon_phase.moonset.minute);
-	var mp = json.moon_phase.phaseofMoon + ", " + json.moon_phase.percentIlluminated + "% Illuminated";
-	
-	console.log("Moonrise: " + mr + " Moonset: " + ms + " MoonPhase: " + json.moon_phase.percentIlluminated + "% Illuminated" );
-	
-	//Update DOM
-	$("#tmoonrise").html("Moonrise: " + mr);
-	$("#tmoonset").html("Moonset: " + ms);
-	
-	$("#smoonrise").text(mr);
-	$("#smoonset").text(ms);
-	$("#smoonphase").text(mp);
-	
-	//Loop through json object
-	//$.each(json, function(){
-	//  $.each(this, function(name, value){
-	//    console.log(name + " = " + value);
-	//  });
-	//});
-	
-	//Set map home location
-	setHome();
-	
-	//Start SVG Animation
-	TweenSunMoon();
-  }); 
-*/
-  
-  //Reset Map home location on resize
-  $(window).resize(function() {
-    setHome();
-  });
+    //TweenSunMoon();
+    //% of arc = (current - start) / (end - start)
+    var nowMin = convertHrsMinsToMins(nowDate.getHours(), nowDate.getMinutes());
+    var srMin = convertHrsMinsToMins(calcs.srHr, calcs.srMin);
+    var ssMin = convertHrsMinsToMins(calcs.ssHr, calcs.ssMin);
+    var mrMin = convertHrsMinsToMins(calcs.mrHr, calcs.mrMin);
+    var msMin = convertHrsMinsToMins(calcs.msHr, calcs.msMin);
+
+    var SunArc = round(((nowMin - srMin) / (ssMin - srMin)),2);
+    console.log("Sunrise: " + srMin + " Sunset: " + ssMin + " SunArcPercent: " + SunArc);
+    TweenSun(SunArc);
+    
+    var MoonArc
+    if ((mr.includes("AM") == true) && (ms.includes("PM") == true)) {
+        MoonArc = round(((nowMin - mrMin) / (msMin - mrMin)), 2);
+    };
+    if ((mr.includes("PM") == true) && (ms.includes("AM") == true)) {
+        msMin = msMin + 1440
+        MoonArc = round(((nowMin - mrMin) / (msMin - mrMin)), 2);
+    };
+    if ((mr.includes("PM") == true) && (ms.includes("PM") == true)) {
+        MoonArc = round(((nowMin + (1440 - mrMin)) / (1440 - mrMin + msMin)), 2);
+    };
+    if ((mr.includes("AM") == true) && (ms.includes("AM") == true)) {
+        MoonArc = round(((nowMin - mrMin) / (msMin - mrMin)), 2);
+    };
+    console.log("Moonrise: " + mrMin + " Moonset: " + msMin + " MoonArcPercent: " + MoonArc);
+    TweenMoon(MoonArc);
   
 //End jQuery  
 });
@@ -194,7 +134,11 @@ function loadMap(sLoc, sIso, sObj) {
     sObj = "&obj=" + sObj;
   };
   console.log("http://www.timeanddate.com/scripts/sunmap.php?"+sIso+sObj);
-  $("#"+sLoc).attr("src", "http://www.timeanddate.com/scripts/sunmap.php?"+sIso+sObj);
+  var img = $("#"+sLoc);
+  img.on("load", function() {
+	setHome();
+  });
+  img.attr("src", "http://www.timeanddate.com/scripts/sunmap.php?"+sIso+sObj);
 };
 
 //Now, formatted	    
@@ -219,7 +163,13 @@ function lpad(number, digits) {
 //AM/PM formatting
 function AMPM(Hrs, Min) {
   if (Hrs <= 12){
-    return Hrs + ":" + Min + " AM"
+      if (Hrs == 0) {
+        return "12" + ":" + Min + " AM"
+      }
+      else {
+        return Hrs + ":" + Min + " AM"
+      };
+    
   }
   else{
     return (Hrs - 12) + ":" + Min + " PM"   
@@ -230,7 +180,6 @@ function AMPM(Hrs, Min) {
 function round10(number){
   	return (Math.round(number / 10) * 10);
 };
-
   
 function convertMinsToHrsMins(minutes) {
   var h = Math.floor(minutes / 60);
@@ -240,13 +189,21 @@ function convertMinsToHrsMins(minutes) {
   return h + ':' + m;
 };
 
+function convertHrsMinsToMins(Hrs, Min) {
+    return Math.round((Number(Hrs) * 60) + Number(Min));
+};
+
 function wait(ms) {
   var start = new Date().getTime();
   var end = start;
   while(end < start + ms) {
     end = new Date().getTime();
   }
-};  
+};
+
+function round(value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+};
 
 //Update home location on map
 function setHome(){
@@ -254,84 +211,92 @@ function setHome(){
   $("#home").css({"top": (h * .26) + "px", "left": (w * .26 + ((o - w) * .5)) + "px"});
 };
 
-
 //SVG animation 
-function TweenSunMoon() {
-//https://greensock.com/tweenmax
+function TweenSun(pause) {
+    //https://greensock.com/tweenmax
+    //var pause = percent of arc to stop at
+    //TweenLite.defaultEase = Power1.easeInOut;
+    TweenLite.defaultEase = Linear.easeNone;
 
+    //Sun animation
+    var tl = new TimelineMax();
 
-//TweenLite.defaultEase = Power1.easeInOut;
-TweenLite.defaultEase = Linear.easeNone;
-
-//Sun animation
-  var tl = new TimelineMax({repeat:-1});
-  //start - hide items
-  tl.add(TweenLite.to("#outline_x5F_up", 0, {autoAlpha: 0}) );
-  tl.add(TweenLite.to("#sun", 0, {autoAlpha:0, x:0, y:0}) );
-  tl.add(TweenLite.to("#moon", 0, {autoAlpha:0, x:0, y:0}) );
-  //transition sun in and arc
-  tl.add(TweenLite.to("#sun", 1, {autoAlpha: 1}) );
-  tl.add(TweenLite.to("#sun", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
-  tl.add(TweenLite.to("#sun", 1, {autoAlpha: 0}) ); 
-  //Daylight
-  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 1 }), 1 );
-  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 0 }), 6);
-  //transition moon in and arc 
-  tl.add(TweenLite.to("#moon", 1, {autoAlpha: 1}),6 );
-  tl.add(TweenLite.to("#moon", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
-  tl.add(TweenLite.to("#moon", 1, {autoAlpha: 0}) );
+    //start - hide items
+    TweenLite.to("#outline_x5F_up", 0, { autoAlpha: 0 });
+    TweenLite.to("#sun", 0, { autoAlpha: 0, x: 0, y: 0 });
+    TweenLite.to("#moon", 0, { autoAlpha: 0, x: 0, y: 0 });
   
-  
-//var tween;
-//var opacity = false;
-//var motionPathMoon = MorphSVGPlugin.pathDataToBezier('#outline_x5F_down', {align: '#moon'}).reverse();
-//var motionPathSun = MorphSVGPlugin.pathDataToBezier('#outline_x5F_up', {align: '#sun'}).reverse();
-
-//var strokeUp = "#outline_x5F_up";
-//var strokeDown = "#outline_x5F_down";
-
-//TweenLite.set('#moon', {xPercent: 0, yPercent: 0, autoAlpha: 0});
-//TweenLite.set('#sun', {xPercent: 0, yPercent: 0, autoAlpha: 0});
-
-//TweenLite.to("#moon", 3, {delay: 13, autoAlpha: 1});
-//TweenLite.to("#moon", 10, {delay: 16, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
-
-//TweenLite.to("#sun", 3, {delay: 0, autoAlpha: 1});
-//TweenLite.to("#sun", 10, {delay: 3, bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}});
-
-///Using MorphSVGPlugin
-//TweenMax.to("#sun", 3, {bezier:{values:motionPathSun, type:"cubic"}});
-//TweenLite.to("#sun", 3, {delay: 0, autoAlpha: 0});
-
-//TweenLite.to("#moon", 3, {delay: 0, autoAlpha: 1});
-//TweenMax.to("#moon", 3, {delay: 3, bezier:{values:motionPathMoon, type:"cubic"}});
-
-
-//TweenLite.set("#outline_x5F_up", { scaleX: -1, transformOrigin: "center center", drawSVG: 0 });
-//TweenLite.set(strokeDown, { scaleX: -1, transformOrigin: "center center", drawSVG: 0 });
-
-//TweenLite.to("#outline_x5F_up", 3, {drawSVG: true });
-//TweenLite.to("#outline_x5F_up", 0.2, {delay: 3, autoAlpha: 0 });
-//TweenLite.to(strokeDown, 3, {delay: 3, drawSVG: true });
+    //transition sun in and arc
+    if (pause > 0){
+      TweenLite.to("#sun", 0.5, { autoAlpha: 1 });
+    };
+    //tl.add(TweenLite.to("#sun", 1, { autoAlpha: 1 }));
+    tl.add(TweenLite.to("#sun", 10, { bezier: { values: [{ x: 0, y: 0 }, { x: 450, y: -650 }, { x: 945, y: 0 }], type: "quadratic" }, onUpdate: updateFunction }));
+    if (pause >= 1) {
+        tl.add(TweenLite.to("#sun", 0.5, { autoAlpha: 0 }));
+    };
+    //Daylight
+    tl.add(TweenLite.to("#outline_x5F_up", 5, { autoAlpha: 1 }), 0);
+    tl.add(TweenLite.to("#outline_x5F_up", 5, { autoAlpha: 0 }), 5);
+   
+    function updateFunction() {
+        if (tl.progress() >= pause) {
+            console.log("Progress: " + round(tl.progress(), 2));
+            console.log("Pause: " + pause);
+            tl.pause();
+        };
+    };
 };
 
-function test1(){
-//https://greensock.com/tweenmax
-//Sun animation
-  var tl = new TimelineMax({repeat:-1});
-  //start - hide items
-  tl.add(TweenLite.to("#outline_x5F_up", 0, {autoAlpha: 0}) );
-  tl.add(TweenLite.to("#sun", 0, {autoAlpha:0, x:0, y:0}) );
-  tl.add(TweenLite.to("#moon", 0, {autoAlpha:0, x:0, y:0}) );
-  //transition sun in and arc
-  tl.add(TweenLite.to("#sun", 2, {autoAlpha: 1}) );
-  tl.add(TweenLite.to("#sun", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}), 2);
-  tl.add(TweenLite.to("#sun", 2, {autoAlpha: 0}) ); 
-  //Daylight
-  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 1 }), 2 );
-  tl.add(TweenLite.to("#outline_x5F_up", 5, {autoAlpha: 0 }), 7);
-  //transition moon in and arc 
-  tl.add(TweenLite.to("#moon", 2, {autoAlpha: 1}) );
-  tl.add(TweenLite.to("#moon", 10, {bezier:{values:[{x:0, y:0},{x:450, y:-650},{x:945, y:0}], type:"quadratic"}}) );
-  tl.add(TweenLite.to("#moon", 2, {autoAlpha: 0}) );
+function TweenMoon(pause) {
+    //https://greensock.com/tweenmax
+    //var pause = percent of arc to stop at
+    //TweenLite.defaultEase = Power1.easeInOut;
+    TweenLite.defaultEase = Linear.easeNone;
+
+    //Moon animation
+    var tl = new TimelineMax();
+
+    //start - hide items
+    TweenLite.to("#moon", 0, { autoAlpha: 0, x: 0, y: 0 });
+
+    //transition
+    if (pause > 0) {
+        TweenLite.to("#moon", 0.5, { autoAlpha: 1 });
+    };
+    //tl.add(TweenLite.to("#moon", 1, { autoAlpha: 1 }));
+    tl.add(TweenLite.to("#moon", 10, { bezier: { values: [{ x: 0, y: 0 }, { x: 450, y: -650 }, { x: 945, y: 0 }], type: "quadratic" }, onUpdate: updateFunction }));
+    //
+    if (pause >= 1) {
+        tl.add(TweenLite.to("#moon", 0.5, { autoAlpha: 0 }));
+    };
+
+    function updateFunction() {
+        if (tl.progress() > pause) {
+            console.log("Progress: " + round(tl.progress(), 2));
+            console.log("Pause: " + pause);
+            tl.pause();
+        };
+    };
+};
+
+function calcMoonPhase(x) {
+	if (x <= 0.1) {
+		return "New Moon";
+	} else if (x <= 0.24) {
+		return "Waxing Crescent";
+	} else if (x <= 0.26) {
+		return "First Quarter";
+	} else if (x <= 0.49) {
+		return "Waxing Gibbous";
+	} else if (x <= 0.51) {
+		return "Full Moon";
+	} else if (x <= 0.74) {
+		return "Waning Gibbous";
+	} else if (x <= 0.76) {
+		return "Last Quarter";
+	} else if (x <= 1.0) {
+		return "Waning Crescent";
+	}
+	return null;
 }
